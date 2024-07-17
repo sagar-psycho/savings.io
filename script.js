@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const totalSavingsEl = document.getElementById("total-savings");
+    const todaySavingsEl = document.getElementById("today-savings"); // New element
     const amountInput = document.getElementById("amount");
     const transactionTypeSelect = document.getElementById("transaction-type");
     const submitBtn = document.getElementById("submit-btn");
@@ -9,7 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const clearAllBtn = document.getElementById("clear-all-btn");
     const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
     const confirmClearAllBtn = document.getElementById("confirm-clear-all-btn");
+
     let totalSavings = parseFloat(localStorage.getItem("totalSavings")) || 0.0;
+    let todaySavings = parseFloat(localStorage.getItem("todaySavings")) || 0.0; // New variable
+    const lastSavedDate = localStorage.getItem("lastSavedDate") || new Date().toLocaleDateString();
     let savingsHistory = JSON.parse(localStorage.getItem("savingsHistory")) || [];
     let selectedTransactionIndex = null;
 
@@ -21,6 +25,20 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateTotalSavings() {
         totalSavingsEl.textContent = totalSavings.toFixed(2);
         localStorage.setItem("totalSavings", totalSavings.toFixed(2));
+    }
+
+    function updateTodaySavings() {
+        todaySavingsEl.textContent = todaySavings.toFixed(2);
+        localStorage.setItem("todaySavings", todaySavings.toFixed(2));
+    }
+
+    function resetTodaySavingsIfNewDay() {
+        const today = new Date().toLocaleDateString();
+        if (lastSavedDate !== today) {
+            todaySavings = 0.0;
+            localStorage.setItem("lastSavedDate", today);
+            updateTodaySavings();
+        }
     }
 
     function updateCalendar() {
@@ -63,7 +81,9 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("savingsHistory", JSON.stringify(savingsHistory));
         updateSavingsTable();
         totalSavings += amount;
+        todaySavings += amount; // Update today's savings
         updateTotalSavings();
+        updateTodaySavings(); // Update display and local storage
         updateCalendar();
     }
 
@@ -72,7 +92,9 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("savingsHistory", JSON.stringify(savingsHistory));
         updateSavingsTable();
         totalSavings -= amount;
+        todaySavings -= amount; // Update today's savings
         updateTotalSavings();
+        updateTodaySavings(); // Update display and local storage
         updateCalendar();
     }
 
@@ -104,10 +126,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function clearAllData() {
         totalSavings = 0.0;
+        todaySavings = 0.0; // Reset today's savings
         savingsHistory = [];
         localStorage.setItem("totalSavings", "0.00");
+        localStorage.setItem("todaySavings", "0.00"); // Reset local storage
         localStorage.setItem("savingsHistory", JSON.stringify([]));
+        localStorage.setItem("lastSavedDate", new Date().toLocaleDateString());
         updateTotalSavings();
+        updateTodaySavings(); // Update display and local storage
         updateSavingsTable();
         updateCalendar();
     }
@@ -135,9 +161,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (selectedTransactionIndex !== null) {
             const transaction = savingsHistory[selectedTransactionIndex];
             totalSavings -= transaction.amount;
+            todaySavings -= transaction.amount; // Update today's savings
             savingsHistory.splice(selectedTransactionIndex, 1);
             updateSavingsTable();
             updateTotalSavings();
+            updateTodaySavings(); // Update display and local storage
             updateCalendar();
             $('#deleteConfirmModal').modal('hide');
         }
@@ -149,15 +177,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Initial setup
+    resetTodaySavingsIfNewDay(); // Check if the day has changed
     updateTotalSavings();
+    updateTodaySavings(); // Initialize today's savings display
     updateSavingsTable();
     updateCalendar();
 });
 
-
-
-
 document.addEventListener("contextmenu", function(event){
     alert("inspect is not allowed");
     event.preventDefault();
-})
+});
