@@ -66,3 +66,79 @@ body {
 .today {
     border: 2px solid #007bff;
 }
+
+
+.saving-row {
+    background-color: #d4edda; /* Light green */
+}
+
+.withdraw-row {
+    background-color: #f8d7da; /* Light red */
+}@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
+body {
+    font-family: "Roboto Slab", serif;
+    font-optical-sizing: auto;
+}
+
+.card {
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-top: 20px;
+}
+.conts{
+    margin-top: 20px;
+}
+.calendar-day {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    background-color: #eee;
+}
+
+.calendar-day.green {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+.calendar-day.red {
+    background-color: #F44336;
+    color: #fff;
+}
+
+.calendar-day {
+    width: 40px;
+    height: 40px;
+    margin: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    transition: background-color 0.3s;
+}
+
+.green-day {
+    background-color: #d4edda;
+}
+
+.red-day {
+    background-color: #f8d7da;
+}
+
+.yellow-day {
+    background-color: #fff3cd;
+}
+
+.today {
+    border: 2px solid #007bff;
+}
